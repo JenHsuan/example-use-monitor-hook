@@ -19,18 +19,20 @@ import {
     TemplateStyle,
 } from './styles/Style';
 
+import useMonitor from '../../../build/useMonitor';
+
 const ReduxTester = () => {
-    const dispatch = useDispatch();
-    const data = useSelector(selectData);
-    useEffect(() => {
-        dispatch(getData());
-    },[]);
+    const {results, status} = useMonitor(['https://arena.garmin.com.tw/ciqarena/api/japan-wearable-expo-2020-service/data',
+                           'https://arena.garmin.com.tw/ciqarena/api/japan-wearable-expo-2020-service/data'], 3000);
 
     return (
         <TemplateStyle variant='main'>
-            <div data-testid="text-content">
-                {data}
-            </div>
+            {results.map((result, index) =>{
+                return <div key = {index}>{result.ca}</div>
+            })}
+            {status.map((s, index) =>{
+                return <div key = {index}>{s}</div>
+            })}
         </TemplateStyle>
     )
 }
