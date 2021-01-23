@@ -19,21 +19,32 @@ import {
     TemplateStyle,
 } from './styles/Style';
 
-import useMonitor from '../../../build/useMonitor';
+import useMonitor from 'use-react-monitor';
 
 const ReduxTester = () => {
-    const {results, status} = useMonitor(['https://arena.garmin.com.tw/ciqarena/api/japan-wearable-expo-2020-service/data',
-                           'https://arena.garmin.com.tw/ciqarena/api/japan-wearable-expo-2020-service/data'], 3000);
+    const interval = 3000;
+    const {results, status, lastTimes} = useMonitor(
+        { urls:['http://rem-rest-api.herokuapp.com/api/users',
+                'http://rem-rest-api.herokuapp.com/api/users',
+                'http://rem-rest-api.herokuapp.com/api/users'],
+          freshRate: interval});
 
     return (
-        <TemplateStyle variant='main'>
-            {results.map((result, index) =>{
-                return <div key = {index}>{result.ca}</div>
+        <div>
+            {results.map((result, i) =>{
+                return (
+                    <>
+                        <div>Last updated time: {lastTimes[i]}</div>
+                        <div>Status: {status[i]}</div>
+                        <ul key={i}>
+                            {result.data.map((r, index) => {
+                                return (<li key={index}>{r.id} {r.firstName} {r.lastName}</li>)
+                            })}
+                        </ul>
+                    </>)
             })}
-            {status.map((s, index) =>{
-                return <div key = {index}>{s}</div>
-            })}
-        </TemplateStyle>
+         </div>
+
     )
 }
 
