@@ -34,8 +34,8 @@ const ReduxTester = () => {
             {results.map((result, i) =>{
                 return (
                     <>
-                        <div>Last updated time: {lastTimes[i]}</div>
-                        <div>Status: {status[i]}</div>
+                        <div key={`lastTime-${i}`}> Last updated time: {lastTimes[i]}</div>
+                        <div key={`status-${i}`}>Status: {status[i]}</div>
                         <ul key={i}>
                             {result.data.map((r, index) => {
                                 return (<li key={index}>{r.id} {r.firstName} {r.lastName}</li>)
