@@ -19,6 +19,6 @@
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.2.1",
     "styled-system": "^5.1.5",
-    "use-react-monitor": "^0.1.26"
+    "use-react-monitor": "^0.2.29"
   }
 }

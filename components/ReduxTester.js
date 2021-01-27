@@ -1,15 +1,27 @@
-import React, {useCallback} from 'react';
-import useMonitor from 'use-react-monitor';
+import React, {memo} from 'react';
+import useMonitor, {monitoredPropsAreEqual} from 'use-react-monitor';
 
+const ReduxTester = () => {
+    const interval = 3000;
+    const {results, status, lastTimes} = useMonitor(
+        { urls:['http://rem-rest-api.herokuapp.com/api/users',
+                'http://rem-rest-api.herokuapp.com/api/users'],
+          freshRate: interval});
 
-const Results = ({ results , status}) => {
+    return (
+        <>
+            {<MemorizedResults results = {results} status = {status}/>}
+        </>
+    )
+}
+
+const Results = ({ results, status}) => {
     const refCount = React.useRef(0);
-
     refCount.current++;
     return (
         <div>
         <p>
-       {refCount.current}
+       {`render time: ${refCount.current}`}
         </p>
         {results && results.map((result, i) =>{
             return (
@@ -26,27 +38,7 @@ const Results = ({ results , status}) => {
     );
 };
 
-const MemorizedResults = React.memo(Results);
-
-const ReduxTester = () => {
-    const interval = 3000;
-    const {results, status, lastTimes} = useMonitor(
-        { urls:['http://rem-rest-api.herokuapp.com/api/users',
-                'http://rem-rest-api.herokuapp.com/api/users'],
-          freshRate: interval});
-
-    const mR = useCallback(()=> (results), [results])
-    const mS = useCallback(()=> (status), [status])
-
-    return (
-        <>
-            <MemorizedResults results = {mR()}
-                              status = {mS()}/>
-            <Results results = {results}
-                                status = {status}/>
-        </>
-    )
-}
+const MemorizedResults = memo(Results, monitoredPropsAreEqual);
 
 export default ReduxTester
 
