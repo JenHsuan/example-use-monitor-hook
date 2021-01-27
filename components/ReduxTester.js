@@ -1,13 +1,19 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import useMonitor from 'use-react-monitor';
 
-const Results = ({ results , status, lastTimes}) => {
+
+const Results = ({ results , status}) => {
+    const refCount = React.useRef(0);
+
+    refCount.current++;
     return (
         <div>
+        <p>
+       {refCount.current}
+        </p>
         {results && results.map((result, i) =>{
             return (
                 <>
-                <div key={`lastTime-${i}`}> Last updated time: {lastTimes[i]}</div>
                     <div key={`status-${i}`}>Status: {status && status[i]}</div>
                     <ul key={i}>
                         {result.data.map((r, index) => {
@@ -29,11 +35,15 @@ const ReduxTester = () => {
                 'http://rem-rest-api.herokuapp.com/api/users'],
           freshRate: interval});
 
+    const mR = useCallback(()=> (results), [results])
+    const mS = useCallback(()=> (status), [status])
+
     return (
         <>
-            <MemorizedResults results = {results}
-                              status = {status}
-                              lastTimes = {lastTimes}/>
+            <MemorizedResults results = {mR()}
+                              status = {mS()}/>
+            <Results results = {results}
+                                status = {status}/>
         </>
     )
 }
